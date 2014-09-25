@@ -20,20 +20,69 @@
 
 
 ::# Here we start with the initializations:
+::# And the very first initialization we need is a
+::# variable to hold the configure options.
 :argv:configure-options:
+
+
+::# And what is our compilation command?
+:setvar:compile:lit:gcc
+
+
+::# Now we specify what C source-code files are
+::# part of <chorbxdoc2html>.
+:brandnew-array:x:main
+:redun:x:chorbxdoc2html--c:
 
 
 
 
 
 :-:
-:-:all:.gitignore
+:-:all: .gitignore chorbxdoc2html
+
+:-:
+:-:chorbxdoc2html:
+:foreach:chorbxdoc2html--c:ccod:
+	:s:1:
+	:echo:var:ccod:
+	:*:.o
+:eachend:
+:->:
+:echo:var:compile:
+:*: -o chorbxdoc2html
+:foreach:chorbxdoc2html--c:ccod:
+	:*: "
+	:echo:var:ccod:
+	:*:.o"
+:eachend:
+
+
+:foreach:chorbxdoc2html--c:ccod:
+	:-:
+	:-:
+	:echo:var:ccod:
+	:*:.o: $(srcdir)/
+	:echo:var:ccod:
+	:*:.c
+	::
+	:->:
+	:echo:var:compile:
+	:*: -o "
+	:echo:var:ccod:
+	:*:.o" -c "$(srcdir)/
+	:echo:var:ccod:
+	:*:.c"
+:eachend:
+
+
 
 :-:
 :-:.gitignore: Makefile
 :->:rm -rf git-ignore-tmp
 :->:echo git-ignore-tmp > git-ignore-tmp
 :->:echo Makefile >> git-ignore-tmp
+:->:echo Makefile.tmp >> git-ignore-tmp
 :->:mv git-ignore-tmp .gitignore
 
 
