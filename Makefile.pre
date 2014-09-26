@@ -44,7 +44,7 @@
 :-:
 :-:chorbxdoc2html:
 :foreach:chorbxdoc2html--c:ccod:
-	:s:1:
+	:*: chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.o
 :eachend:
@@ -52,7 +52,7 @@
 :echo:var:compile:
 :*: -o chorbxdoc2html
 :foreach:chorbxdoc2html--c:ccod:
-	:*: "
+	:*: "chorbxdoc2html-src
 	:echo:var:ccod:
 	:*:.o"
 :eachend:
@@ -60,17 +60,18 @@
 
 :foreach:chorbxdoc2html--c:ccod:
 	:-:
-	:-:
+	:-:chorbxdoc2html-src/
 	:echo:var:ccod:
-	:*:.o: $(srcdir)/
+	:*:.o: $(srcdir)/chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.c
 	::
+	:->:mkdir -p chorbxdoc2html-src
 	:->:
 	:echo:var:compile:
-	:*: -o "
+	:*: -o "chorbxdoc2html-src/
 	:echo:var:ccod:
-	:*:.o" -c "$(srcdir)/
+	:*:.o" -c "$(srcdir)/chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.c"
 :eachend:
@@ -83,6 +84,11 @@
 :->:echo git-ignore-tmp > git-ignore-tmp
 :->:echo Makefile >> git-ignore-tmp
 :->:echo Makefile.tmp >> git-ignore-tmp
+:foreach:chorbxdoc2html--c:ccod:
+	:->:echo 'chorbxdoc2html-src/
+	:echo:shl:gscp:var:ccod:
+	:*:.o' >> git-ignore-tmp
+:eachend:
 :->:mv git-ignore-tmp .gitignore
 
 
