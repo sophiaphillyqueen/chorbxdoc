@@ -1,3 +1,5 @@
+products/
+chorbxdoc2html-obj/
 git-ignore-tmp
 Makefile
 Makefile.tmp

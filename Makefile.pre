@@ -16,6 +16,8 @@
 :#:
 :#: ########################
 :#:
+:adapt:qry:uname -s
+:setvar:product:bin-l:l:products/chorbxdoc2html
 
 
 
@@ -25,8 +27,27 @@
 :argv:configure-options:
 
 
-::# And what is our compilation command?
+::# Here cometh the part where we define the compilation command.
+::# Remember, if the appropriate debugging flag is on, it must
+::# be given the "-Wall -Werror" options so that we won't waltz
+::# through coding mistakes.
 :setvar:compile:l:gcc
+:setvar:cdbg:l:off
+:varfromopt:cdbg:--devel_main:irp
+:varfromopt:cdbg:--devel_e:irp
+:varfromopt:cdbg:--devel_e_c:irp
+:stack:var:cdbg:
+:stack:l:off
+:ifsame-to:cdbg-off:
+:apnvar:compile:l: -Wall -Werror
+:label:cdbg-off:
+:clearstack:
+
+::# Now we split the compilation and linking commands - and
+::# add specifics to each of them.
+:setvar:linky:var:compile:
+:apnvar:linky:l: '-L$(libdir)'
+:apnvar:compile:l: '-I$(includedir)'
 
 
 ::# Now we specify what C source-code files are
@@ -39,20 +60,27 @@
 
 
 :-:
-:-:all: chorbxdoc2html
+:-:all:
+:s:1:
+:echo:var:product:
 
 :-:
-:-:chorbxdoc2html:
+:-:
+:echo:var:product:
+:*::
 :foreach:chorbxdoc2html--c:ccod:
-	:*: chorbxdoc2html-src/
+	:*: chorbxdoc2html-obj/
 	:echo:var:ccod:
 	:*:.o
 :eachend:
+:->:mkdir -p products
 :->:
-:echo:var:compile:
-:*: -o chorbxdoc2html
+:echo:var:linky:
+:*: -o
+:s:1:
+:echo:var:product:
 :foreach:chorbxdoc2html--c:ccod:
-	:*: "chorbxdoc2html-src
+	:*: "chorbxdoc2html-obj/
 	:echo:var:ccod:
 	:*:.o"
 :eachend:
@@ -60,27 +88,41 @@
 
 :foreach:chorbxdoc2html--c:ccod:
 	:-:
-	:-:chorbxdoc2html-src/
+	:-:chorbxdoc2html-obj/
 	:echo:var:ccod:
 	:*:.o: $(srcdir)/chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.c
 	::
-	:->:mkdir -p chorbxdoc2html-src
+	:->:mkdir -p chorbxdoc2html-obj
 	:->:
 	:echo:var:compile:
-	:*: -o "chorbxdoc2html-src/
+	:*: -o "chorbxdoc2html-obj/
 	:echo:var:ccod:
 	:*:.o" -c "$(srcdir)/chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.c"
 :eachend:
 
+:-:
+:-:clean:
+:->:rm -rf products
+:->:rm -rf chorbxdoc2html-obj
+
 
 
 :-:
 :-:Makefile: $(srcdir)/configure $(srcdir)/Makefile.pre
 :*: $(srcdir)/proj-info.txt
+:->:sh "$(srcdir)/configure"
+:foreach:configure-options:confopt:
+	:*: "
+	:echo:var:confopt:
+	:*:"
+:eachend:
+
+:-:
+:-:config:
 :->:sh "$(srcdir)/configure"
 :foreach:configure-options:confopt:
 	:*: "
