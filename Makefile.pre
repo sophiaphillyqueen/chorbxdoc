@@ -26,7 +26,7 @@
 
 
 ::# And what is our compilation command?
-:setvar:compile:lit:gcc
+:setvar:compile:l:gcc
 
 
 ::# Now we specify what C source-code files are
@@ -39,7 +39,7 @@
 
 
 :-:
-:-:all: .gitignore chorbxdoc2html
+:-:all: chorbxdoc2html
 
 :-:
 :-:chorbxdoc2html:
@@ -76,20 +76,6 @@
 	:*:.c"
 :eachend:
 
-
-
-:-:
-:-:.gitignore: Makefile
-:->:rm -rf git-ignore-tmp
-:->:echo git-ignore-tmp > git-ignore-tmp
-:->:echo Makefile >> git-ignore-tmp
-:->:echo Makefile.tmp >> git-ignore-tmp
-:foreach:chorbxdoc2html--c:ccod:
-	:->:echo 'chorbxdoc2html-src/
-	:echo:shl:gscp:var:ccod:
-	:*:.o' >> git-ignore-tmp
-:eachend:
-:->:mv git-ignore-tmp .gitignore
 
 
 :-:
