@@ -17,8 +17,9 @@
 :#: ########################
 :#:
 :adapt:qry:uname -s
-:setvar:product:bin-l:l:products/chorbxdoc2html
-
+:setvar:producto:l:products/chorbxdoc2html
+:setvar:product:bin-l:var:producto:
+:setvar:bndr:l:$(bindir)
 
 
 ::# Here we start with the initializations:
@@ -65,6 +66,17 @@
 :echo:var:product:
 
 :-:
+:-:install: all
+:bin-in:var:producto::var:bndr::
+
+:-:
+:-:uninstall:
+:->:rm -rf '
+:echo:shl:bin-i:l:$(bindir)/chorbxdoc2html
+:*:'
+
+
+:-:
 :-:
 :echo:var:product:
 :*::
@@ -85,7 +97,8 @@
 	:*:.o"
 :eachend:
 
-
+::# This is the part where we do the making of the object
+::# file for each of the command's source-files.
 :foreach:chorbxdoc2html--c:ccod:
 	:-:
 	:-:chorbxdoc2html-obj/
@@ -93,6 +106,8 @@
 	:*:.o: $(srcdir)/chorbxdoc2html-src/
 	:echo:var:ccod:
 	:*:.c
+	:*: $(srcdir)/chorbxdoc2html-src/chorbxdoc2html.h
+	:*: Makefile
 	::
 	:->:mkdir -p chorbxdoc2html-obj
 	:->:
